@@ -25,13 +25,7 @@ export default function Home() {
   });
 
   const handleSubmit = async (e) => {
-    console.log(tripDetails)
-    
-
     const userResponse = e.target.userInput.value;
-
-    console.log("setting to: " + userResponse)
-    console.log("in step: " + step)
     
     if (step == 1) {
       setTripDetails({
@@ -83,8 +77,6 @@ export default function Home() {
       setIsProcessing(false)
       return;
     }
-
-    console.log('yo my guy: ', prediction)
 
     setEvents(
       myEvents.concat([
