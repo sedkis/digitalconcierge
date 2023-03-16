@@ -1,4 +1,5 @@
 const API_HOST = process.env.REPLICATE_API_HOST || "https://api.openai.com";
+const API_PATH = process.env.REPLICATE_API_PATH || "v1/completions"
 
 import packageData from "../../../package.json";
 
@@ -27,7 +28,7 @@ export default async function handler(req, res) {
     "User-Agent": `${packageData.name}/${packageData.version}`
   }
 
-  const response = await fetch(`${API_HOST}/v1/completions`, {
+  const response = await fetch(`${API_HOST}/${API_PATH}`, {
     method: "POST",
     headers,
     body,
@@ -36,7 +37,8 @@ export default async function handler(req, res) {
   if (response.status !== 200) {
     let error = await response.json();
     res.statusCode = 500;
-    res.end(JSON.stringify({ detail: error.detail }));
+    console.log(error)
+    res.end(JSON.stringify({ error: "some kind of error occured." }));
     return;
   }
 

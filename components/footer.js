@@ -25,7 +25,7 @@ export default function Footer({ events, startOver, handleImageDropped }) {
           </button>
         )}
 
-        <Link href="https://github.com/replicate/instruct-pix2pix-demo">
+        <Link href="https://github.com/sedkis/digitalconcierge">
           <a className="lil-button" target="_blank" rel="noopener noreferrer">
             <CodeIcon className="icon" />
             Fork repo
@@ -36,7 +36,7 @@ export default function Footer({ events, startOver, handleImageDropped }) {
       <div className="text-center lil-text mt-8">
       <div className="inline-block py-2 px-4 border border-yellow-200 rounded-lg bg-[#fef6aa]">
       🤔 Are you a developer and want to learn how to build this? Check out the{" "}
-        <Link href="https://github.com/replicate/paint-with-words#readme">
+        <Link href="https://www.sedkodes.com/blog/using-chatgpt-to-write-a-chatgptbot">
           <a target="_blank">README</a>
         </Link>.
       </div>

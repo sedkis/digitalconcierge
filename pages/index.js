@@ -9,7 +9,7 @@ import { getRandomSeed } from "lib/seeds";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export const appName = "Raisin, Your Digital Concierge";
+export const appName = "Digital Concierge";
 export const appSubtitle = "Plan a trip, with the help of an AI, Raisin.";
 export const appMetaDescription = "Plan a trip, with the help of an AI.";
 
@@ -81,7 +81,8 @@ export default function Home() {
     const prediction = await response.json();
 
     if (response.status !== 200) {
-      setError(prediction.detail);
+      setError(prediction.error);
+      setIsProcessing(false)
       return;
     }
 

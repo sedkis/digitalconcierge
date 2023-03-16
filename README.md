@@ -27,3 +27,6 @@ This app is powered by:
     npm run dev
     ```
 1. Open [localhost:3000](http://localhost:3000) in your browser. That's it!
+
+## Fork
+Fork of [Replicate](https://github.com/replicate/instruct-pix2pix-demo)
