@@ -5,14 +5,13 @@ import { useEffect, useState } from "react";
 
 import Footer from "components/footer";
 
-import prepareImageFileForUpload from "lib/prepare-image-file-for-upload";
 import { getRandomSeed } from "lib/seeds";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-export const appName = "Paint by Text";
-export const appSubtitle = "Edit your photos using written instructions, with the help of an AI.";
-export const appMetaDescription = "Edit your photos using written instructions, with the help of an AI.";
+export const appName = "Raisin, Your Digital Concierge";
+export const appSubtitle = "Plan a trip, with the help of an AI, Raisin.";
+export const appMetaDescription = "Plan a trip, with the help of an AI.";
 
 export default function Home() {
   const [events, setEvents] = useState([]);
@@ -20,40 +19,56 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [seed] = useState(getRandomSeed());
-  const [initialPrompt, setInitialPrompt] = useState(seed.prompt);
-
-  // set the initial image from a random seed
-  useEffect(() => {
-    setEvents([{ image: seed.image }]);
-  }, [seed.image]);
-
-  const handleImageDropped = async (image) => {
-    try {
-      image = await prepareImageFileForUpload(image);
-    } catch (error) {
-      setError(error.message);
-      return;
-    }
-    setEvents(events.concat([{ image }]));
-  };
+  const [step, setStep] = useState(1);
+  const [tripDetails, setTripDetails] = useState({
+    date: null,
+    numDays: null,
+    location: null
+  });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    console.log(tripDetails)
+    
 
-    const prompt = e.target.prompt.value;
-    const lastImage = events.findLast((ev) => ev.image)?.image;
+    const userResponse = e.target.userInput.value;
+
+    console.log("setting to: " + userResponse)
+    console.log("in step: " + step)
+    
+    if (step == 1) {
+      setTripDetails({
+        ...tripDetails,
+        date: userResponse
+      });
+    }
+    else if (step == 2) {
+      setTripDetails({
+        ...tripDetails,
+        numDays: userResponse
+      });
+    }
+    else if (step == 3) {
+      setTripDetails({
+        ...tripDetails,
+        location: userResponse
+      });
+    }
+
+    // make a copy so that the second call to setEvents here doesn't blow away the first. Why?
+    const myEvents = [...events, { userResponse, user: 'user' }];
+    setEvents(myEvents);
+
+    if (step != 3) {
+      setStep(step + 1)
+      return
+    }
 
     setError(null);
     setIsProcessing(true);
-    setInitialPrompt("");
-
-    // make a copy so that the second call to setEvents here doesn't blow away the first. Why?
-    const myEvents = [...events, { prompt }];
-    setEvents(myEvents);
 
     const body = {
-      prompt,
-      image: lastImage,
+      ...tripDetails,
+      location: userResponse
     };
 
     const response = await fetch("/api/predictions", {
@@ -65,44 +80,20 @@ export default function Home() {
     });
     const prediction = await response.json();
 
-    if (response.status !== 201) {
+    if (response.status !== 200) {
       setError(prediction.detail);
       return;
     }
 
-    while (
-      prediction.status !== "succeeded" &&
-      prediction.status !== "failed"
-    ) {
-      await sleep(500);
-      const response = await fetch("/api/predictions/" + prediction.id);
-      prediction = await response.json();
-      if (response.status !== 200) {
-        setError(prediction.detail);
-        return;
-      }
+    console.log('yo my guy: ', prediction)
 
-      // just for bookkeeping
-      setPredictions(predictions.concat([prediction]));
-
-      if (prediction.status === "succeeded") {
-        setEvents(
-          myEvents.concat([
-            { image: prediction.output?.[prediction.output.length - 1] },
-          ])
-        );
-      }
-    }
+    setEvents(
+      myEvents.concat([
+        { userResponse: prediction.choices[0].text },
+      ])
+    );
 
     setIsProcessing(false);
-  };
-
-  const startOver = async (e) => {
-    e.preventDefault();
-    setEvents(events.slice(0, 1));
-    setError(null);
-    setIsProcessing(false);
-    setInitialPrompt(seed.prompt);
   };
 
   return (
@@ -126,17 +117,10 @@ export default function Home() {
         <Messages
           events={events}
           isProcessing={isProcessing}
-          onUndo={(index) => {
-            setInitialPrompt(events[index - 1].prompt);
-            setEvents(
-              events.slice(0, index - 1).concat(events.slice(index + 1))
-            );
-          }}
         />
 
         <PromptForm
-          initialPrompt={initialPrompt}
-          isFirstPrompt={events.length === 1}
+          step={step}
           onSubmit={handleSubmit}
           disabled={isProcessing}
         />
@@ -147,8 +131,6 @@ export default function Home() {
 
         <Footer
           events={events}
-          startOver={startOver}
-          handleImageDropped={handleImageDropped}
         />
       </main>
     </div>

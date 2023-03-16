@@ -25,17 +25,6 @@ export default function Footer({ events, startOver, handleImageDropped }) {
           </button>
         )}
 
-        <Dropzone onImageDropped={handleImageDropped} />
-
-        {events.length > 2 && (
-          <Link href={events.findLast((ev) => ev.image).image}>
-            <a className="lil-button" target="_blank" rel="noopener noreferrer">
-              <DownloadIcon className="icon" />
-              Download image
-            </a>
-          </Link>
-        )}
-
         <Link href="https://github.com/replicate/instruct-pix2pix-demo">
           <a className="lil-button" target="_blank" rel="noopener noreferrer">
             <CodeIcon className="icon" />

@@ -1,23 +1,16 @@
-# 👩‍🎨 Paint by Text
+# 👩‍🎨 Raisin
 
-Modify images by chatting with a generative AI model.
+Plan a travel itinerary using the help of Raisin, a Digital Concierge built on ChatGPT.
 
-Try it out at [paintbytext.chat](http://paintbytext.chat)
+Try it out at [raisin.sedkodes.com](https://raisin.sedkodes.com)
 
 ## How it works
 
 This app is powered by:
 
-🚀 [Replicate](https://replicate.com/?utm_source=project&utm_campaign=paintbytext), a platform for running machine learning models in the cloud.
-
-🎨 [InstructPix2Pix](https://replicate.com/timothybrooks/instruct-pix2pix?utm_source=project&utm_campaign=paintbytext), an open-source machine learning model that generates images from text.
-
 ▲ [Vercel](https://vercel.com/), a platform for running web apps.
-
 ⚡️ Next.js [server-side API routes](pages/api), for talking to the Replicate API.
-
 👀 Next.js React components, for the browser UI.
-
 🍃 [Tailwind CSS](https://tailwindcss.com/), for styles.
 
 

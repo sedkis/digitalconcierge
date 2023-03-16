@@ -1,4 +1,4 @@
-const API_HOST = process.env.REPLICATE_API_HOST || "https://api.replicate.com";
+const API_HOST = process.env.REPLICATE_API_HOST || "https://api.openai.com";
 
 import packageData from "../../../package.json";
 
@@ -6,6 +6,8 @@ export default async function handler(req, res) {
   if (!process.env.REPLICATE_API_TOKEN) {
     throw new Error("The REPLICATE_API_TOKEN environment variable is not set. See README.md for instructions on how to set it.");
   }
+
+  console.log("New request: ", req.body)
   
   // remnove null and undefined values
   req.body = Object.entries(req.body).reduce(
@@ -13,25 +15,25 @@ export default async function handler(req, res) {
     {}
   );
 
-  const body = JSON.stringify({
-    // https://replicate.com/timothybrooks/instruct-pix2pix/versions
-    version: "30c1d0b916a6f8efce20493f5d61ee27491ab2a60437c13c588468b9810ec23f",
-    input: req.body,
+  const body = JSON.stringify({   
+    max_tokens: 500, 
+    model: "text-davinci-003",
+    prompt: `Can you in less than 200 words give me a ${req.body.numDays} day itinerary in ${req.body.location}`
   });
 
   const headers = {
-    Authorization: `Token ${process.env.REPLICATE_API_TOKEN}`,
+    Authorization: `${process.env.REPLICATE_API_TOKEN}`,
     "Content-Type": "application/json",
     "User-Agent": `${packageData.name}/${packageData.version}`
   }
 
-  const response = await fetch(`${API_HOST}/v1/predictions`, {
+  const response = await fetch(`${API_HOST}/v1/completions`, {
     method: "POST",
     headers,
     body,
   });
 
-  if (response.status !== 201) {
+  if (response.status !== 200) {
     let error = await response.json();
     res.statusCode = 500;
     res.end(JSON.stringify({ detail: error.detail }));
@@ -39,7 +41,7 @@ export default async function handler(req, res) {
   }
 
   const prediction = await response.json();
-  res.statusCode = 201;
+  res.statusCode = 200;
   res.end(JSON.stringify(prediction));
 }
 
