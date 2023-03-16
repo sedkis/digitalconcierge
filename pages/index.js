@@ -15,10 +15,8 @@ export const appMetaDescription = "Plan a trip, with the help of an AI.";
 
 export default function Home() {
   const [events, setEvents] = useState([]);
-  const [predictions, setPredictions] = useState([]);
   const [error, setError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [seed] = useState(getRandomSeed());
   const [step, setStep] = useState(1);
   const [tripDetails, setTripDetails] = useState({
     date: null,
