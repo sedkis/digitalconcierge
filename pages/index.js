@@ -80,7 +80,7 @@ export default function Home() {
 
     setEvents(
       myEvents.concat([
-        { userResponse: prediction.choices[0].text },
+        { userResponse: prediction.choices[0].message.content },
       ])
     );
 
