@@ -1,5 +1,5 @@
 const API_HOST = process.env.REPLICATE_API_HOST || "https://api.openai.com";
-const API_PATH = process.env.REPLICATE_API_PATH || "v1/completions"
+const API_PATH = process.env.REPLICATE_API_PATH || "v1/chat/completions"
 
 import packageData from "../../../package.json";
 
