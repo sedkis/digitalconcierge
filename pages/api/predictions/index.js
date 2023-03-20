@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
   const body = JSON.stringify({   
     max_tokens: 500, 
-    model: "text-davinci-003",
+    model: "gpt-3.5-turbo",
     prompt: `Can you in less than 200 words give me a ${req.body.numDays} day itinerary in ${req.body.location} in ${req.body.date}`
   });
 
